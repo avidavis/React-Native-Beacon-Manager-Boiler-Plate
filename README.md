@@ -1,0 +1,1 @@
+# React-Native-Beacon-Manager-Boiler-Plate
