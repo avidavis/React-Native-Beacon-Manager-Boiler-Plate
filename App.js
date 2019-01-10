@@ -23,11 +23,6 @@ export default class App extends Component<Props> {
   beaconsDidRangeEvent = null;
   constructor(props) {
     super(props);
-    this.state = {
-      // region information. Replace UUID and UUID2 with your own beacon region information. 
-      uuid: '6665542b-41a1-5e00-931c-6a82db9b78c2',
-      identifier: 'Beacon Testing 1'
-    };
     this.rangeBeacons = this.rangeBeacons.bind(this);
 
   }
@@ -36,20 +31,24 @@ export default class App extends Component<Props> {
   }
 
 async componentDidMount(){
-    const { identifier, uuid } = this.state;
-    const FestivalExit1 = { identifier, uuid };
-  await Beacons
-    .startRangingBeaconsInRegion(FestivalExit1) // or like  < v1.0.7: .startRangingBeaconsInRegion(identifier, uuid)
-    .then(() => console.log('Beacon Testing 1 ranging started succesfully'))
-    .catch(error => console.log(`Beacon Testing 1 ranging not started, error: ${error}`));
-  
-    this.beaconsDidRangeEvent = Beacons.BeaconsEventEmitter.addListener(
-      "beaconsDidRange",
-      data => {
-      console.log('1111', data);
-      }
-      );
+  Beacons
+.startRangingBeaconsInRegion("test")
+.then(() => console.log('Beacons monitoring started successfully'))
+.catch(error => console.log(`Beacons monitoring not started, error: ${error}`));
+this.beaconsDidRangeEvent = Beacons.BeaconsEventEmitter.addListener(
+  "beaconsDidRange",
+  data => {
+  console.log('1111', data);
   }
+  );
+  }
+
+  async componentWillUnMount() {
+    await Beacons.stopRangingBeaconsInRegion("test");
+    console.log('Beacons ranging stopped successfully');
+    this.beaconsDidRangeEvent.remove();
+  }
+
 
  rangeBeacons(){
     console.log("in ranging function")
